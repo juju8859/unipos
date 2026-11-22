@@ -12,7 +12,9 @@ import {
   TrendingUp,
   Percent,
   Layers,
-  AlertTriangle
+  AlertTriangle,
+  Camera,
+  Image as ImageIcon
 } from 'lucide-react';
 
 export default function MenuManagementTab() {
@@ -30,9 +32,55 @@ export default function MenuManagementTab() {
   const [costPrice, setCostPrice] = useState('');
   const [isAvailable, setIsAvailable] = useState(true);
   const [code, setCode] = useState('');
+  const [image, setImage] = useState('');
 
   // Delete confirmation modal state
   const [productToDelete, setProductToDelete] = useState(null);
+
+  // Handle image upload and client-side resize to 400x400
+  const handleImageUpload = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      showToast('Harap pilih file gambar (JPG, PNG, WebP)', 'warning');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const MAX_SIZE = 400;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > MAX_SIZE) {
+            height *= MAX_SIZE / width;
+            width = MAX_SIZE;
+          }
+        } else {
+          if (height > MAX_SIZE) {
+            width *= MAX_SIZE / height;
+            height = MAX_SIZE;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+
+        const compressedBase64 = canvas.toDataURL('image/jpeg', 0.82);
+        setImage(compressedBase64);
+        showToast('Foto menu berhasil dimuat!', 'success');
+      };
+      img.src = event.target.result;
+    };
+    reader.readAsDataURL(file);
+  };
 
   // Extract categories
   const categories = useMemo(() => {
@@ -63,6 +111,7 @@ export default function MenuManagementTab() {
     setCostPrice('');
     setIsAvailable(true);
     setCode('');
+    setImage('');
     setIsModalOpen(true);
   };
 
@@ -74,6 +123,7 @@ export default function MenuManagementTab() {
     setCostPrice(prod.costPrice || '');
     setIsAvailable(prod.isAvailable ?? true);
     setCode(prod.code || '');
+    setImage(prod.image || '');
     setIsModalOpen(true);
   };
 
@@ -96,7 +146,8 @@ export default function MenuManagementTab() {
       price: numPrice,
       costPrice: Number(costPrice) || 0,
       isAvailable,
-      code: code.trim() || ''
+      code: code.trim() || '',
+      image: image || ''
     };
 
     const success = await saveProduct(payload);
@@ -193,8 +244,24 @@ export default function MenuManagementTab() {
                     </span>
                   </div>
 
-                  <h3 className="font-bold text-white text-sm leading-snug mb-1">{prod.name}</h3>
-                  {prod.code && <p className="text-[10px] font-mono text-slate-500 mb-2">Kode: {prod.code}</p>}
+                  <div className="flex items-center gap-3 mb-2">
+                    {prod.image ? (
+                      <img
+                        src={prod.image}
+                        alt={prod.name}
+                        className="w-12 h-12 rounded-xl object-cover border border-white/10 flex-shrink-0"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="w-12 h-12 rounded-xl bg-slate-800 border border-dark-border flex items-center justify-center text-slate-500 flex-shrink-0">
+                        <ImageIcon className="w-5 h-5 opacity-40" />
+                      </div>
+                    )}
+                    <div className="min-w-0 flex-1">
+                      <h3 className="font-bold text-white text-sm leading-snug truncate">{prod.name}</h3>
+                      {prod.code && <p className="text-[10px] font-mono text-slate-500">Kode: {prod.code}</p>}
+                    </div>
+                  </div>
                 </div>
 
                 {/* Financial & Margin Info */}
@@ -270,6 +337,44 @@ export default function MenuManagementTab() {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-3.5 overflow-y-auto flex-1 pr-1">
+              {/* Upload Foto Menu */}
+              <div>
+                <label className="block text-xs font-medium text-slate-300 mb-1">Foto Menu (Opsional)</label>
+                <div className="flex items-center gap-3">
+                  {image ? (
+                    <div className="relative w-16 h-16 rounded-xl overflow-hidden border border-slate-700 bg-slate-900 flex-shrink-0">
+                      <img src={image} alt="Preview" className="w-full h-full object-cover" />
+                      <button
+                        type="button"
+                        onClick={() => setImage('')}
+                        className="absolute top-1 right-1 p-0.5 rounded-full bg-rose-600 text-white shadow-sm hover:bg-rose-500"
+                        title="Hapus foto"
+                      >
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="w-16 h-16 rounded-xl border border-dashed border-slate-700 bg-slate-900/60 flex items-center justify-center text-slate-500 flex-shrink-0">
+                      <ImageIcon className="w-6 h-6 opacity-40" />
+                    </div>
+                  )}
+
+                  <div className="flex-1">
+                    <label className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-semibold cursor-pointer transition-colors">
+                      <Camera className="w-4 h-4 text-indigo-400" />
+                      <span>{image ? 'Ganti Foto...' : 'Pilih Foto Menu...'}</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={handleImageUpload}
+                      />
+                    </label>
+                    <p className="text-[10px] text-slate-400 mt-1">Format JPG/PNG/WebP, otomatis dikompres agar hemat penyimpanan HP.</p>
+                  </div>
+                </div>
+              </div>
+
               <div>
                 <label className="block text-xs font-medium text-slate-300 mb-1">Nama Produk / Menu *</label>
                 <input

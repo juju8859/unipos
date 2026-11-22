@@ -10,6 +10,7 @@ export const DEFAULT_SETTINGS = {
   phone: '0812-3456-7890',
   receiptFooter: 'Terima Kasih Atas Kunjungan Anda!\nBarang yang sudah dibeli tidak dapat ditukar.',
   logoBase64: '',
+  qrisBase64: '',
   printerMode: 'rawbt', // 'rawbt' | 'ble' | 'dialog'
   paperWidth: 58, // 58 or 80
   autoPrintOnCheckout: true,
@@ -27,7 +28,8 @@ const INITIAL_PRODUCTS = [
     price: 18000,
     costPrice: 8000,
     isAvailable: true,
-    code: 'MIN-001'
+    code: 'MIN-001',
+    image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=400&q=80'
   },
   {
     name: 'Teh Manis Solo (Ice/Hot)',
@@ -35,7 +37,8 @@ const INITIAL_PRODUCTS = [
     price: 6000,
     costPrice: 2000,
     isAvailable: true,
-    code: 'MIN-002'
+    code: 'MIN-002',
+    image: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&q=80'
   },
   {
     name: 'Matcha Latte Premium',
@@ -43,7 +46,8 @@ const INITIAL_PRODUCTS = [
     price: 22000,
     costPrice: 10000,
     isAvailable: true,
-    code: 'MIN-003'
+    code: 'MIN-003',
+    image: 'https://images.unsplash.com/photo-1536256263959-770b48d82b0a?w=400&q=80'
   },
   {
     name: 'Nasi Goreng Spesial Telur',
@@ -51,7 +55,8 @@ const INITIAL_PRODUCTS = [
     price: 25000,
     costPrice: 12000,
     isAvailable: true,
-    code: 'MAK-001'
+    code: 'MAK-001',
+    image: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400&q=80'
   },
   {
     name: 'Ayam Geprek Sambal Bawang + Nasi',
@@ -59,7 +64,8 @@ const INITIAL_PRODUCTS = [
     price: 22000,
     costPrice: 11000,
     isAvailable: true,
-    code: 'MAK-002'
+    code: 'MAK-002',
+    image: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=400&q=80'
   },
   {
     name: 'Roti Bakar Coklat Keju',
@@ -67,7 +73,8 @@ const INITIAL_PRODUCTS = [
     price: 15000,
     costPrice: 6500,
     isAvailable: true,
-    code: 'MAK-003'
+    code: 'MAK-003',
+    image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=400&q=80'
   },
   {
     name: 'French Fries Crispy',
@@ -75,7 +82,8 @@ const INITIAL_PRODUCTS = [
     price: 14000,
     costPrice: 6000,
     isAvailable: true,
-    code: 'SNK-001'
+    code: 'SNK-001',
+    image: 'https://images.unsplash.com/photo-1576107232684-1279f3908594?w=400&q=80'
   },
   {
     name: 'Jasa Cetak / Print Dokumen A4',
@@ -83,7 +91,8 @@ const INITIAL_PRODUCTS = [
     price: 1000,
     costPrice: 300,
     isAvailable: true,
-    code: 'JSA-001'
+    code: 'JSA-001',
+    image: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=400&q=80'
   },
   {
     name: 'Kaos Polos Cotton Combed 30s',
@@ -91,7 +100,8 @@ const INITIAL_PRODUCTS = [
     price: 45000,
     costPrice: 28000,
     isAvailable: true,
-    code: 'RTL-001'
+    code: 'RTL-001',
+    image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=400&q=80'
   }
 ];
 
@@ -181,6 +191,16 @@ class Database {
           ...prod,
           createdAt: new Date().toISOString()
         });
+      }
+    } else {
+      // Backfill images for demo products if missing
+      for (const prod of products) {
+        if (!prod.image) {
+          const match = INITIAL_PRODUCTS.find((p) => p.name === prod.name);
+          if (match && match.image) {
+            await this.update('products', { ...prod, image: match.image });
+          }
+        }
       }
     }
   }

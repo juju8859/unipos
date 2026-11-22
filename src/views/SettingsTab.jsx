@@ -32,6 +32,7 @@ export default function SettingsTab() {
   const [phone, setPhone] = useState(settings.phone || '');
   const [receiptFooter, setReceiptFooter] = useState(settings.receiptFooter || '');
   const [logoBase64, setLogoBase64] = useState(settings.logoBase64 || '');
+  const [qrisBase64, setQrisBase64] = useState(settings.qrisBase64 || '');
 
   // Local state for printer settings
   const [printerMode, setPrinterMode] = useState(settings.printerMode || 'rawbt');
@@ -63,6 +64,24 @@ export default function SettingsTab() {
     reader.readAsDataURL(file);
   };
 
+  // Handle QRIS Barcode Upload to Base64
+  const handleQrisUpload = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 2 * 1024 * 1024) {
+      showToast('Ukuran gambar QRIS maksimal 2MB', 'warning');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      setQrisBase64(event.target.result);
+      showToast('Gambar QRIS berhasil diunggah (belum disimpan)', 'info');
+    };
+    reader.readAsDataURL(file);
+  };
+
   const handleSaveAll = async (e) => {
     e.preventDefault();
     if (!isAdminLoggedIn) {
@@ -78,6 +97,7 @@ export default function SettingsTab() {
       phone: phone.trim(),
       receiptFooter: receiptFooter.trim(),
       logoBase64,
+      qrisBase64,
       printerMode,
       paperWidth: Number(paperWidth),
       autoPrintOnCheckout,
@@ -219,6 +239,55 @@ export default function SettingsTab() {
                     />
                   </label>
                   <p className="text-[10px] text-slate-400 mt-1">Format PNG/JPG/WebP, disarankan rasio 1:1 persegi (Maks 1MB).</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Upload Gambar QRIS Toko */}
+          <div>
+            <label className="block text-xs font-medium text-slate-300 mb-2">
+              Barcode / Gambar QRIS Toko (Tampil Saat Pembeli Bayar via QRIS)
+            </label>
+            <div className="flex items-center gap-4">
+              {qrisBase64 ? (
+                <div className="relative group">
+                  <img
+                    src={qrisBase64}
+                    alt="QRIS Toko"
+                    className="w-20 h-20 rounded-2xl object-contain bg-white p-1 border border-white/20 shadow-md"
+                  />
+                  {isAdminLoggedIn && (
+                    <button
+                      type="button"
+                      onClick={() => setQrisBase64('')}
+                      className="absolute -top-1.5 -right-1.5 w-6 h-6 rounded-full bg-rose-600 text-white flex items-center justify-center shadow-md hover:bg-rose-500 transition-all"
+                      title="Hapus QRIS"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                </div>
+              ) : (
+                <div className="w-20 h-20 rounded-2xl bg-dark-bg border border-dashed border-dark-border flex flex-col items-center justify-center text-slate-500">
+                  <ImageIcon className="w-6 h-6 mb-0.5" />
+                  <span className="text-[9px]">Belum Ada QRIS</span>
+                </div>
+              )}
+
+              {isAdminLoggedIn && (
+                <div>
+                  <label className="cursor-pointer px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold inline-flex items-center gap-2 transition-all">
+                    <Upload className="w-3.5 h-3.5" />
+                    <span>Upload Foto Barcode QRIS</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleQrisUpload}
+                      className="hidden"
+                    />
+                  </label>
+                  <p className="text-[10px] text-slate-400 mt-1">Screenshot atau foto QRIS toko Anda (BCA, GoPay, Dana, dll).</p>
                 </div>
               )}
             </div>

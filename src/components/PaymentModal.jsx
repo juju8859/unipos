@@ -208,12 +208,44 @@ export default function PaymentModal({ isOpen, onClose }) {
             </div>
           )}
 
+          {/* QRIS Display when 'qris' is selected */}
+          {paymentMethod === 'qris' && (
+            <div className="p-4 rounded-2xl bg-white text-slate-900 text-center flex flex-col items-center justify-center space-y-2.5 shadow-md">
+              <span className="text-xs font-bold text-slate-500 tracking-wider uppercase">
+                QRIS Dinamis / Statis {settings?.brandName || 'Toko'}
+              </span>
+
+              {settings?.qrisBase64 ? (
+                <img
+                  src={settings.qrisBase64}
+                  alt="QRIS Toko"
+                  className="w-44 h-44 object-contain rounded-xl border border-slate-200 p-1"
+                />
+              ) : (
+                <div className="w-44 h-44 bg-slate-50 rounded-xl border-2 border-dashed border-slate-300 flex flex-col items-center justify-center p-3">
+                  <QrCode className="w-24 h-24 text-slate-800 mb-1" />
+                  <span className="text-[10px] font-bold text-slate-700">Scan QRIS Pembayaran</span>
+                </div>
+              )}
+
+              <div className="bg-indigo-50 border border-indigo-200 px-3 py-1.5 rounded-lg w-full">
+                <span className="text-[11px] text-slate-600 block">Total Tagihan:</span>
+                <span className="text-base font-extrabold text-indigo-700 font-mono">
+                  {formatCurrency(grandTotal)}
+                </span>
+              </div>
+              <p className="text-[10px] text-slate-500">
+                Mendukung BCA, Mandiri, BRI, BNI, GoPay, OVO, Dana, ShopeePay & Semua Bank.
+              </p>
+            </div>
+          )}
+
           {/* Non-cash guidance note */}
           {paymentMethod !== 'tunai' && (
             <div className="p-3 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-xs flex items-center gap-2">
               <CheckCircle className="w-4 h-4 flex-shrink-0" />
               <span>
-                Pastikan pembayaran via {paymentMethod === 'qris' ? 'QRIS' : 'Transfer Bank'} telah berhasil diverifikasi sebelum menyelesaikan transaksi.
+                Pembayaran via {paymentMethod === 'qris' ? 'QRIS' : 'Transfer Bank'} akan otomatis dicatat ke database transaksi dan log audit.
               </span>
             </div>
           )}

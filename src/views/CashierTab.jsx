@@ -157,8 +157,24 @@ export default function CashierTab() {
                       </span>
                     )}
 
-                    <div>
-                      <span className="inline-block text-[10px] font-medium text-slate-400 uppercase tracking-wider mb-1 truncate max-w-full">
+                    {/* Product Photo or Category Icon */}
+                    {product.image ? (
+                      <div className="w-full h-24 sm:h-28 mb-2 rounded-xl overflow-hidden bg-slate-900 border border-white/5 relative flex-shrink-0">
+                        <img
+                          src={product.image}
+                          alt={product.name}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+                          loading="lazy"
+                        />
+                      </div>
+                    ) : (
+                      <div className="w-full h-16 sm:h-20 mb-2 rounded-xl bg-gradient-to-br from-indigo-950/40 to-slate-900/60 border border-white/5 flex items-center justify-center text-slate-500 flex-shrink-0">
+                        <Tag className="w-5 h-5 opacity-40" />
+                      </div>
+                    )}
+
+                    <div className="flex-1">
+                      <span className="inline-block text-[10px] font-medium text-slate-400 uppercase tracking-wider mb-0.5 truncate max-w-full">
                         {product.category || 'Umum'}
                       </span>
                       <h4 className="font-semibold text-white text-xs sm:text-sm line-clamp-2 leading-snug group-hover:text-indigo-300 transition-colors">
@@ -295,7 +311,7 @@ export default function CashierTab() {
 
         {/* Calculations & Discounts Section */}
         {cart.length > 0 && (
-          <div className="p-3.5 border-t border-dark-border bg-dark-card/40 space-y-2.5">
+          <div className="p-3.5 border-t border-dark-border bg-dark-card/90 space-y-2.5 pb-28 lg:pb-3.5 flex-shrink-0">
             {/* Subtotal */}
             <div className="flex justify-between text-xs text-slate-300">
               <span>Subtotal</span>

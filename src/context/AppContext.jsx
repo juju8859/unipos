@@ -22,6 +22,18 @@ export function AppProvider({ children }) {
   const [showAdminAuthModal, setShowAdminAuthModal] = useState(false);
   const [pendingAdminAction, setPendingAdminAction] = useState(null); // Callback or Tab switch to run on login
 
+  // Cashier Shift State
+  const [activeCashier, setActiveCashierState] = useState(() => {
+    return localStorage.getItem('unipos_active_cashier') || 'Kasir 1';
+  });
+
+  const setActiveCashier = (name) => {
+    const val = (name || '').trim() || 'Kasir 1';
+    setActiveCashierState(val);
+    localStorage.setItem('unipos_active_cashier', val);
+    showToast(`Kasir bertugas: ${val}`, 'info');
+  };
+
   // Cart State
   const [cart, setCart] = useState([]);
   const [discountType, setDiscountType] = useState('nominal'); // 'nominal' | 'percent'
@@ -304,7 +316,7 @@ export function AppProvider({ children }) {
         dateFormatted,
         monthYear,
         customerName: customerName.trim(),
-        cashierName: isAdminLoggedIn ? (currentAdmin?.name || 'Admin') : 'Kasir',
+        cashierName: activeCashier || (isAdminLoggedIn ? (currentAdmin?.name || 'Admin') : 'Kasir 1'),
         items: itemsSnapshot,
         subtotal: cartSubtotal,
         discount: discountAmount,
@@ -554,6 +566,8 @@ export function AppProvider({ children }) {
           const logs = await db.getAll('audit_logs');
           setAuditLogs(logs.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)));
         },
+        activeCashier,
+        setActiveCashier,
         hasRegisteredAdmin,
         isAdminLoggedIn,
         currentAdmin,
