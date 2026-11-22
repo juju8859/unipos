@@ -186,7 +186,6 @@ export default function ReceiptModal() {
               {(settings?.receiptFooter || 'Terima kasih atas kunjungan Anda!').split('\n').map((line, i) => (
                 <p key={i}>{line}</p>
               ))}
-              <p className="text-[9px] text-cyan-600 font-bold mt-1 tracking-wider">*** RSYFL DEVELOPMENT ***</p>
             </div>
           </div>
         </div>

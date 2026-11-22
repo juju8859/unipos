@@ -192,11 +192,6 @@ export function buildReceiptEscPos(transaction, settings) {
     if (fLine.trim()) builder.line(fLine.trim());
   }
 
-  builder.line('--------------------------------');
-  builder.line('Sistem Kasir Resmi');
-  builder.bold(true);
-  builder.line('RSYFL DEVELOPMENT');
-  builder.bold(false);
   builder.feed(2);
   builder.cut();
 
