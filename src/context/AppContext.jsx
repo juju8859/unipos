@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
-import { db, DEFAULT_SETTINGS } from '../db/indexedDB';
+import { db, DEFAULT_SETTINGS, INITIAL_PRODUCTS } from '../db/indexedDB';
 import { executePrint, generateTestReceipt } from '../utils/printer';
 
 const AppContext = createContext();
@@ -66,7 +66,22 @@ export function AppProvider({ children }) {
       const allAdmins = await db.getAll('admins');
       setHasRegisteredAdmin(allAdmins.length > 0);
 
-      const allProducts = await db.getAll('products');
+      let allProducts = await db.getAll('products');
+      // If products exist in phone from version 1 without images, automatically backfill images now
+      let needsRefresh = false;
+      for (const prod of allProducts) {
+        if (!prod.image) {
+          const match = INITIAL_PRODUCTS.find((p) => p.name === prod.name);
+          if (match && match.image) {
+            prod.image = match.image;
+            await db.update('products', prod);
+            needsRefresh = true;
+          }
+        }
+      }
+      if (needsRefresh) {
+        allProducts = await db.getAll('products');
+      }
       setProducts(allProducts.sort((a, b) => (a.name || '').localeCompare(b.name || '')));
 
       const allTrx = await db.getAll('transactions');

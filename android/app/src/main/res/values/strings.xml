@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">UniPOS</string>
-    <string name="title_activity_main">UniPOS</string>
+    <string name="app_name">UniPOS - RSYFL DEV</string>
+    <string name="title_activity_main">UniPOS - RSYFL DEV</string>
     <string name="package_name">com.rsyfl.unipos</string>
     <string name="custom_url_scheme">com.rsyfl.unipos</string>
 </resources>

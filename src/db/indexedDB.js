@@ -1,6 +1,6 @@
 // IndexedDB Database Manager for UniPOS Universal Cashier
 const DB_NAME = 'UniPOS_DB';
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 
 // Default brand settings
 export const DEFAULT_SETTINGS = {
@@ -21,7 +21,7 @@ export const DEFAULT_SETTINGS = {
 };
 
 // Seed initial universal products so the cashier works right away
-const INITIAL_PRODUCTS = [
+export const INITIAL_PRODUCTS = [
   {
     name: 'Kopi Susu Gula Aren',
     category: 'Minuman',
