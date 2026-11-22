@@ -198,9 +198,9 @@ export default function CashierTab() {
         </div>
       </div>
 
-      {/* RIGHT / SIDE PANEL: Cart Panel (Sticky on Desktop, Drawer on Mobile) */}
+      {/* RIGHT / SIDE PANEL: Cart Panel (Sticky on Desktop, Full Drawer on Mobile) */}
       <div
-        className={`fixed lg:static inset-y-0 right-0 z-40 w-full sm:w-96 lg:w-96 bg-dark-surface border-l border-dark-border flex flex-col transition-transform duration-300 ${
+        className={`fixed lg:static inset-0 lg:inset-auto right-0 z-50 lg:z-30 w-full sm:w-96 lg:w-96 bg-dark-surface border-l border-dark-border flex flex-col transition-transform duration-300 ${
           isMobileCartOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'
         }`}
       >
@@ -234,8 +234,8 @@ export default function CashierTab() {
           </div>
         </div>
 
-        {/* Cart Items List */}
-        <div className="flex-1 overflow-y-auto p-3 space-y-2">
+        {/* Scrollable Middle: Items & Discount Adjustments */}
+        <div className="flex-1 overflow-y-auto p-3 space-y-3">
           {cart.length === 0 ? (
             <div className="h-64 flex flex-col items-center justify-center text-slate-400 text-center p-4">
               <ShoppingCart className="w-12 h-12 text-slate-600 mb-2 stroke-[1.5]" />
@@ -243,158 +243,163 @@ export default function CashierTab() {
               <p className="text-xs text-slate-500 mt-0.5">Pilih produk di sebelah kiri untuk menambahkan pesanan.</p>
             </div>
           ) : (
-            cart.map((item) => (
-              <div
-                key={item.product.id}
-                className="p-2.5 rounded-xl bg-dark-card border border-dark-border hover:border-slate-700 transition-all space-y-2"
-              >
-                <div className="flex items-start justify-between gap-2">
-                  <div className="min-w-0">
-                    <h5 className="font-semibold text-white text-xs leading-snug truncate">
-                      {item.product.name}
-                    </h5>
-                    <span className="font-mono text-xs text-indigo-300">
-                      {formatCurrency(item.product.price)}
-                    </span>
+            <>
+              {/* Cart Items List */}
+              <div className="space-y-2">
+                {cart.map((item) => (
+                  <div
+                    key={item.product.id}
+                    className="p-2.5 rounded-xl bg-dark-card border border-dark-border hover:border-slate-700 transition-all space-y-2"
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="min-w-0">
+                        <h5 className="font-semibold text-white text-xs leading-snug truncate">
+                          {item.product.name}
+                        </h5>
+                        <span className="font-mono text-xs text-cyan-300">
+                          {formatCurrency(item.product.price)}
+                        </span>
+                      </div>
+
+                      <span className="font-mono font-bold text-xs text-white">
+                        {formatCurrency(item.product.price * item.qty)}
+                      </span>
+                    </div>
+
+                    {/* Optional Order Note */}
+                    <div className="flex items-center justify-between text-[11px] gap-2">
+                      {item.notes ? (
+                        <button
+                          onClick={() => setEditingNoteItem({ id: item.product.id, name: item.product.name, notes: item.notes })}
+                          className="text-amber-300/80 hover:text-amber-200 truncate flex items-center gap-1 text-[10px]"
+                        >
+                          <FileText className="w-3 h-3 flex-shrink-0" />
+                          <span className="truncate">"{item.notes}"</span>
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => setEditingNoteItem({ id: item.product.id, name: item.product.name, notes: '' })}
+                          className="text-slate-400 hover:text-slate-200 text-[10px] flex items-center gap-1"
+                        >
+                          <Tag className="w-3 h-3" />
+                          <span>+ Catatan</span>
+                        </button>
+                      )}
+
+                      {/* Quantity Stepper */}
+                      <div className="flex items-center gap-1.5 bg-dark-bg/80 border border-dark-border rounded-lg p-0.5">
+                        <button
+                          onClick={() => updateCartQty(item.product.id, item.qty - 1)}
+                          className="w-6 h-6 rounded flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-700 active:scale-95 transition-all"
+                        >
+                          {item.qty === 1 ? <Trash2 className="w-3 h-3 text-rose-400" /> : <Minus className="w-3 h-3" />}
+                        </button>
+
+                        <span className="w-6 text-center font-mono font-bold text-xs text-white">
+                          {item.qty}
+                        </span>
+
+                        <button
+                          onClick={() => updateCartQty(item.product.id, item.qty + 1)}
+                          className="w-6 h-6 rounded flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-700 active:scale-95 transition-all"
+                        >
+                          <Plus className="w-3 h-3" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Subtotal, Diskon & Pajak Options Inside Scroll Area */}
+              <div className="p-3 rounded-2xl bg-dark-card/60 border border-dark-border space-y-2.5 mt-2">
+                {/* Subtotal */}
+                <div className="flex justify-between text-xs text-slate-300">
+                  <span>Subtotal Pesanan</span>
+                  <span className="font-mono font-medium">{formatCurrency(cartSubtotal)}</span>
+                </div>
+
+                {/* Discount Form Row */}
+                <div className="space-y-1 pt-1.5 border-t border-white/5">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-slate-400">Potongan / Diskon</span>
+                    <div className="flex items-center gap-1">
+                      <button
+                        type="button"
+                        onClick={() => setDiscountType('nominal')}
+                        className={`px-1.5 py-0.5 rounded text-[10px] font-semibold ${
+                          discountType === 'nominal' ? 'bg-cyan-600 text-white' : 'bg-slate-800 text-slate-400'
+                        }`}
+                      >
+                        Rp
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setDiscountType('percent')}
+                        className={`px-1.5 py-0.5 rounded text-[10px] font-semibold ${
+                          discountType === 'percent' ? 'bg-cyan-600 text-white' : 'bg-slate-800 text-slate-400'
+                        }`}
+                      >
+                        %
+                      </button>
+                    </div>
                   </div>
 
-                  <span className="font-mono font-bold text-xs text-white">
-                    {formatCurrency(item.product.price * item.qty)}
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="number"
+                      placeholder={discountType === 'percent' ? '0 - 100%' : 'Nominal potongan (Rp)'}
+                      value={discountValue || ''}
+                      onChange={(e) => setDiscountValue(Math.max(0, Number(e.target.value)))}
+                      className="w-full px-2.5 py-1.5 rounded-lg glass-input text-xs text-white font-mono focus:outline-none"
+                    />
+                    {discountAmount > 0 && (
+                      <span className="text-xs font-mono text-rose-400 font-bold whitespace-nowrap">
+                        -{formatCurrency(discountAmount)}
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Tax PB1 Toggle */}
+                <div className="flex items-center justify-between text-xs pt-1.5 border-t border-white/5">
+                  <label className="flex items-center gap-2 cursor-pointer select-none">
+                    <input
+                      type="checkbox"
+                      checked={taxEnabled}
+                      onChange={(e) => setTaxEnabled(e.target.checked)}
+                      className="w-3.5 h-3.5 rounded accent-cyan-500"
+                    />
+                    <span className="text-slate-300">Pajak / PB1 ({taxRate}%)</span>
+                  </label>
+                  <span className="font-mono text-slate-400">
+                    {taxEnabled ? '+' + formatCurrency(taxAmount) : 'OFF'}
                   </span>
                 </div>
-
-                {/* Optional Order Note */}
-                <div className="flex items-center justify-between text-[11px] gap-2">
-                  {item.notes ? (
-                    <button
-                      onClick={() => setEditingNoteItem({ id: item.product.id, name: item.product.name, notes: item.notes })}
-                      className="text-amber-300/80 hover:text-amber-200 truncate flex items-center gap-1 text-[10px]"
-                    >
-                      <FileText className="w-3 h-3 flex-shrink-0" />
-                      <span className="truncate">"{item.notes}"</span>
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => setEditingNoteItem({ id: item.product.id, name: item.product.name, notes: '' })}
-                      className="text-slate-400 hover:text-slate-200 text-[10px] flex items-center gap-1"
-                    >
-                      <Tag className="w-3 h-3" />
-                      <span>+ Catatan</span>
-                    </button>
-                  )}
-
-                  {/* Quantity Stepper */}
-                  <div className="flex items-center gap-1.5 bg-dark-bg/80 border border-dark-border rounded-lg p-0.5">
-                    <button
-                      onClick={() => updateCartQty(item.product.id, item.qty - 1)}
-                      className="w-6 h-6 rounded flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-700 active:scale-95 transition-all"
-                    >
-                      {item.qty === 1 ? <Trash2 className="w-3 h-3 text-rose-400" /> : <Minus className="w-3 h-3" />}
-                    </button>
-
-                    <span className="w-6 text-center font-mono font-bold text-xs text-white">
-                      {item.qty}
-                    </span>
-
-                    <button
-                      onClick={() => updateCartQty(item.product.id, item.qty + 1)}
-                      className="w-6 h-6 rounded flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-700 active:scale-95 transition-all"
-                    >
-                      <Plus className="w-3 h-3" />
-                    </button>
-                  </div>
-                </div>
               </div>
-            ))
+            </>
           )}
         </div>
 
-        {/* Calculations & Discounts Section */}
+        {/* ALWAYS STICKY BOTTOM BAR: Grand Total & Checkout Button */}
         {cart.length > 0 && (
-          <div className="p-3.5 border-t border-dark-border bg-dark-card/90 space-y-2.5 pb-28 lg:pb-3.5 flex-shrink-0">
-            {/* Subtotal */}
-            <div className="flex justify-between text-xs text-slate-300">
-              <span>Subtotal</span>
-              <span className="font-mono font-medium">{formatCurrency(cartSubtotal)}</span>
-            </div>
-
-            {/* Discount Form Row */}
-            <div className="space-y-1">
-              <div className="flex items-center justify-between text-xs">
-                <span className="text-slate-400">Diskon</span>
-                <div className="flex items-center gap-1">
-                  <button
-                    type="button"
-                    onClick={() => setDiscountType('nominal')}
-                    className={`px-1.5 py-0.5 rounded text-[10px] font-semibold ${
-                      discountType === 'nominal' ? 'bg-indigo-600 text-white' : 'bg-slate-800 text-slate-400'
-                    }`}
-                  >
-                    Rp
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setDiscountType('percent')}
-                    className={`px-1.5 py-0.5 rounded text-[10px] font-semibold ${
-                      discountType === 'percent' ? 'bg-indigo-600 text-white' : 'bg-slate-800 text-slate-400'
-                    }`}
-                  >
-                    %
-                  </button>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <input
-                  type="number"
-                  placeholder={discountType === 'percent' ? '0 - 100%' : 'Nominal potongan (Rp)'}
-                  value={discountValue || ''}
-                  onChange={(e) => setDiscountValue(Math.max(0, Number(e.target.value)))}
-                  className="w-full px-2.5 py-1.5 rounded-lg glass-input text-xs text-white font-mono focus:outline-none"
-                />
-                {discountAmount > 0 && (
-                  <span className="text-xs font-mono text-rose-400 font-bold whitespace-nowrap">
-                    -{formatCurrency(discountAmount)}
-                  </span>
-                )}
-              </div>
-            </div>
-
-            {/* Tax PB1 Toggle */}
-            <div className="flex items-center justify-between text-xs pt-1 border-t border-white/5">
-              <label className="flex items-center gap-2 cursor-pointer select-none">
-                <input
-                  type="checkbox"
-                  checked={taxEnabled}
-                  onChange={(e) => setTaxEnabled(e.target.checked)}
-                  className="w-3.5 h-3.5 rounded accent-indigo-600"
-                />
-                <span className="text-slate-300">Pajak / PB1 ({taxRate}%)</span>
-              </label>
-              <span className="font-mono text-slate-400">
-                {taxEnabled ? '+' + formatCurrency(taxAmount) : 'OFF'}
+          <div className="sticky bottom-0 z-30 p-3 sm:p-4 bg-dark-surface/98 backdrop-blur-xl border-t border-dark-border shadow-2xl flex flex-col gap-2">
+            <div className="flex items-baseline justify-between">
+              <span className="text-[10px] font-bold uppercase text-slate-400 tracking-wider">
+                Total Tagihan
+              </span>
+              <span className="text-xl sm:text-2xl font-black text-cyan-300 font-mono">
+                {formatCurrency(grandTotal)}
               </span>
             </div>
 
-            {/* Grand Total */}
-            <div className="pt-2 border-t border-dark-border flex items-center justify-between">
-              <div>
-                <span className="block text-[10px] font-semibold uppercase text-slate-400 tracking-wider">
-                  Total Bayar
-                </span>
-                <span className="text-xl font-extrabold text-white font-mono">
-                  {formatCurrency(grandTotal)}
-                </span>
-              </div>
-
-              <button
-                onClick={() => setIsPaymentOpen(true)}
-                className="px-5 py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-brand-600 hover:from-indigo-500 hover:to-brand-500 text-white font-bold text-sm shadow-lg shadow-indigo-600/30 transition-all active:scale-95 flex items-center gap-2"
-              >
-                <span>BAYAR</span>
-                <Receipt className="w-4 h-4" />
-              </button>
-            </div>
+            <button
+              onClick={() => setIsPaymentOpen(true)}
+              className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white font-extrabold text-sm shadow-xl shadow-emerald-600/30 transition-all active:scale-[0.98] flex items-center justify-center gap-2"
+            >
+              <span>PROSES BAYAR & CETAK STRUK</span>
+              <Receipt className="w-5 h-5" />
+            </button>
           </div>
         )}
       </div>
