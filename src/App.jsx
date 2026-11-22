@@ -45,7 +45,7 @@ export default function App() {
       <Header />
 
       {/* Main Tab Views */}
-      <main className="flex-1 flex flex-col overflow-hidden relative z-10">
+      <main className="flex-1 flex flex-col overflow-hidden relative">
         {activeTab === 'pos' && <CashierTab />}
         {activeTab === 'history' && <HistoryTab />}
         {activeTab === 'menu' && <MenuManagementTab />}

@@ -198,9 +198,9 @@ export default function CashierTab() {
         </div>
       </div>
 
-      {/* RIGHT / SIDE PANEL: Cart Panel (Sticky on Desktop, Full Drawer on Mobile) */}
+      {/* RIGHT / SIDE PANEL: Cart Panel (Fixed above bottom nav on mobile, Sticky on desktop) */}
       <div
-        className={`fixed lg:static inset-0 lg:inset-auto right-0 z-50 lg:z-30 w-full sm:w-96 lg:w-96 bg-dark-surface border-l border-dark-border flex flex-col transition-transform duration-300 ${
+        className={`fixed lg:static inset-x-0 top-0 bottom-16 lg:bottom-0 lg:inset-auto right-0 z-30 w-full sm:w-96 lg:w-96 bg-dark-surface border-l border-dark-border flex flex-col transition-transform duration-300 ${
           isMobileCartOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'
         }`}
       >
@@ -381,11 +381,11 @@ export default function CashierTab() {
           )}
         </div>
 
-        {/* ALWAYS STICKY BOTTOM BAR: Grand Total & Checkout Button */}
+        {/* ALWAYS VISIBLE PINNED BOTTOM BAR: Grand Total & Checkout Button */}
         {cart.length > 0 && (
-          <div className="sticky bottom-0 z-30 p-3 sm:p-4 bg-dark-surface/98 backdrop-blur-xl border-t border-dark-border shadow-2xl flex flex-col gap-2">
+          <div className="flex-shrink-0 p-3.5 sm:p-4 bg-dark-surface/98 backdrop-blur-xl border-t border-dark-border shadow-2xl flex flex-col gap-2.5">
             <div className="flex items-baseline justify-between">
-              <span className="text-[10px] font-bold uppercase text-slate-400 tracking-wider">
+              <span className="text-xs font-bold uppercase text-slate-400 tracking-wider">
                 Total Tagihan
               </span>
               <span className="text-xl sm:text-2xl font-black text-cyan-300 font-mono">
@@ -394,11 +394,12 @@ export default function CashierTab() {
             </div>
 
             <button
+              type="button"
               onClick={() => setIsPaymentOpen(true)}
-              className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white font-extrabold text-sm shadow-xl shadow-emerald-600/30 transition-all active:scale-[0.98] flex items-center justify-center gap-2"
+              className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-white font-black text-sm shadow-xl shadow-emerald-500/30 transition-all active:scale-[0.98] flex items-center justify-center gap-2"
             >
+              <Receipt className="w-5 h-5 flex-shrink-0" />
               <span>PROSES BAYAR & CETAK STRUK</span>
-              <Receipt className="w-5 h-5" />
             </button>
           </div>
         )}
