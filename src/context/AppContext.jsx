@@ -66,9 +66,9 @@ export function AppProvider({ children }) {
       const allLogs = await db.getAll('audit_logs');
       setAuditLogs(allLogs.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)));
 
-      // If no admin registered, prompt registration on first launch
+      // Don't block initial POS screen, user can register from Header or when accessing Admin tabs
       if (allAdmins.length === 0) {
-        setShowAdminAuthModal(true);
+        setShowAdminAuthModal(false);
       }
     } catch (err) {
       console.error('Failed to load initial DB data:', err);
