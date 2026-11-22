@@ -56,23 +56,30 @@ export default function Header() {
               <img
                 src={settings.logoBase64}
                 alt="Logo"
-                className="w-10 h-10 rounded-xl object-cover border border-white/10 shadow-sm"
+                className="w-10 h-10 rounded-xl object-cover border border-cyan-500/30 shadow-md shadow-cyan-500/10"
               />
             ) : (
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-brand-700 flex items-center justify-center text-white shadow-md shadow-indigo-500/20 flex-shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-teal-700 flex items-center justify-center text-white shadow-md shadow-cyan-500/25 flex-shrink-0 border border-white/20">
                 <Store className="w-5 h-5" />
               </div>
             )}
 
             <div className="min-w-0">
-              <h1 className="text-base font-bold text-white tracking-tight truncate leading-tight flex items-center gap-1.5">
-                <span>{settings.brandName || 'UniPOS Store'}</span>
-                <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <h1 className="text-base font-bold text-white tracking-tight truncate leading-tight">
+                  {settings.brandName || 'UniPOS Store'}
+                </h1>
+                <span className="text-[9px] font-extrabold px-1.5 py-0.5 rounded-full bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 tracking-wider">
                   PRO
                 </span>
-              </h1>
-              <p className="text-xs text-slate-400 truncate leading-normal">
-                {settings.subtitle || 'Kasir Universal Offline-First'}
+                <span className="hidden sm:inline-block text-[9px] font-mono font-bold px-1.5 py-0.2 rounded bg-white/5 text-cyan-400 border border-cyan-500/20">
+                  ⚡ RSYFL DEV
+                </span>
+              </div>
+              <p className="text-xs text-slate-400 truncate leading-normal flex items-center gap-1 mt-0.5">
+                <span>{settings.subtitle || 'Kasir Universal Offline-First'}</span>
+                <span className="text-slate-600">•</span>
+                <span className="text-[10px] text-cyan-400/80 font-medium">by Rsyfl Development</span>
               </p>
             </div>
           </div>

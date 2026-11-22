@@ -148,65 +148,90 @@ export default function FinanceTab() {
         </div>
       </div>
 
-      {/* 5 Financial Metric Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-5 gap-2.5">
+      {/* 5 Financial Metric Cards (Admin Dashboard V2 Style) */}
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
         {/* 1. Omzet / Revenue */}
-        <div className="p-3.5 rounded-2xl bg-dark-card border border-dark-border">
-          <span className="text-[10px] uppercase font-bold text-slate-400 block mb-1">
-            Total Omzet
-          </span>
-          <div className="text-base sm:text-lg font-extrabold text-white font-mono">
+        <div className="p-4 rounded-2xl glass-card border border-cyan-500/25 shadow-lg shadow-cyan-500/5 relative overflow-hidden group hover:border-cyan-500/50 transition-all">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[10px] uppercase font-bold text-cyan-300 tracking-wider">
+              Total Omzet
+            </span>
+            <div className="w-7 h-7 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center">
+              <DollarSign className="w-4 h-4" />
+            </div>
+          </div>
+          <div className="text-lg sm:text-xl font-black text-white font-mono">
             {formatCurrency(totalRevenue)}
           </div>
-          <span className="text-[10px] text-slate-400 mt-1 block">
+          <span className="text-[11px] text-cyan-400 font-medium mt-1.5 block">
             {monthlyTransactions.length} Transaksi
           </span>
         </div>
 
         {/* 2. Total HPP */}
-        <div className="p-3.5 rounded-2xl bg-dark-card border border-dark-border">
-          <span className="text-[10px] uppercase font-bold text-slate-400 block mb-1">
-            Total HPP / Modal
-          </span>
-          <div className="text-base sm:text-lg font-extrabold text-amber-400 font-mono">
+        <div className="p-4 rounded-2xl glass-card border border-amber-500/25 shadow-lg shadow-amber-500/5 relative overflow-hidden group hover:border-amber-500/50 transition-all">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[10px] uppercase font-bold text-amber-300 tracking-wider">
+              Total HPP / Modal
+            </span>
+            <div className="w-7 h-7 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center">
+              <TrendingDown className="w-4 h-4" />
+            </div>
+          </div>
+          <div className="text-lg sm:text-xl font-black text-amber-300 font-mono">
             {formatCurrency(totalCost)}
           </div>
-          <span className="text-[10px] text-slate-400 mt-1 block">Harga Pokok Terjual</span>
+          <span className="text-[10px] text-slate-400 mt-1.5 block">Modal Terjual</span>
         </div>
 
         {/* 3. Laba Kotor */}
-        <div className="p-3.5 rounded-2xl bg-dark-card border border-dark-border">
-          <span className="text-[10px] uppercase font-bold text-slate-400 block mb-1">
-            Laba Kotor (Gross)
-          </span>
-          <div className="text-base sm:text-lg font-extrabold text-indigo-400 font-mono">
+        <div className="p-4 rounded-2xl glass-card border border-teal-500/25 shadow-lg shadow-teal-500/5 relative overflow-hidden group hover:border-teal-500/50 transition-all">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[10px] uppercase font-bold text-teal-300 tracking-wider">
+              Laba Kotor
+            </span>
+            <div className="w-7 h-7 rounded-lg bg-teal-500/10 text-teal-400 flex items-center justify-center">
+              <TrendingUp className="w-4 h-4" />
+            </div>
+          </div>
+          <div className="text-lg sm:text-xl font-black text-teal-300 font-mono">
             {formatCurrency(grossProfit)}
           </div>
-          <span className="text-[10px] text-slate-400 mt-1 block">Omzet - HPP</span>
+          <span className="text-[10px] text-teal-400/80 mt-1.5 block">Omzet - HPP</span>
         </div>
 
         {/* 4. Pengeluaran Operasional */}
-        <div className="p-3.5 rounded-2xl bg-dark-card border border-dark-border">
-          <span className="text-[10px] uppercase font-bold text-slate-400 block mb-1">
-            Pengeluaran Ops
-          </span>
-          <div className="text-base sm:text-lg font-extrabold text-rose-400 font-mono">
+        <div className="p-4 rounded-2xl glass-card border border-rose-500/25 shadow-lg shadow-rose-500/5 relative overflow-hidden group hover:border-rose-500/50 transition-all">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[10px] uppercase font-bold text-rose-300 tracking-wider">
+              Pengeluaran Ops
+            </span>
+            <div className="w-7 h-7 rounded-lg bg-rose-500/10 text-rose-400 flex items-center justify-center">
+              <TrendingDown className="w-4 h-4" />
+            </div>
+          </div>
+          <div className="text-lg sm:text-xl font-black text-rose-300 font-mono">
             {formatCurrency(totalExpense)}
           </div>
-          <span className="text-[10px] text-slate-400 mt-1 block">
+          <span className="text-[10px] text-slate-400 mt-1.5 block">
             {monthlyExpenses.length} Biaya tercatat
           </span>
         </div>
 
         {/* 5. Laba Bersih (NET PROFIT) */}
-        <div className="col-span-2 lg:col-span-1 p-3.5 rounded-2xl bg-gradient-to-br from-emerald-950/60 to-slate-900 border border-emerald-500/40">
-          <span className="text-[10px] uppercase font-bold text-emerald-300 block mb-1">
-            LABA BERSIH (NET)
-          </span>
-          <div className="text-lg sm:text-xl font-extrabold text-emerald-400 font-mono">
+        <div className="col-span-2 lg:col-span-1 p-4 rounded-2xl glass-card-glow border border-emerald-500/40 relative overflow-hidden">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[10px] uppercase font-bold text-emerald-300 tracking-wider">
+              LABA BERSIH (NET)
+            </span>
+            <div className="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-300 flex items-center justify-center shadow-sm shadow-emerald-500/20">
+              <PieChart className="w-4 h-4" />
+            </div>
+          </div>
+          <div className="text-lg sm:text-xl font-black text-emerald-300 font-mono">
             {formatCurrency(netProfit)}
           </div>
-          <span className="text-[10px] text-emerald-200/80 mt-1 block">Laba Kotor - Biaya Ops</span>
+          <span className="text-[10px] text-emerald-200/80 mt-1.5 block">Bersih Masuk Dompet</span>
         </div>
       </div>
 

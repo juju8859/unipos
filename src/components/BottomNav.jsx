@@ -66,12 +66,12 @@ export default function BottomNav() {
               onClick={() => setActiveTab(item.id)}
               className={`relative flex flex-col items-center justify-center py-1.5 px-1 rounded-xl transition-all duration-200 ${
                 isActive
-                  ? 'text-indigo-400 bg-indigo-500/10 font-bold'
+                  ? 'text-cyan-300 bg-gradient-to-b from-cyan-500/20 to-teal-500/10 border border-cyan-500/30 font-bold shadow-md shadow-cyan-500/10'
                   : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/40'
               }`}
             >
               <div className="relative">
-                <Icon className={`w-5 h-5 transition-transform ${isActive ? 'scale-110 text-indigo-400' : ''}`} />
+                <Icon className={`w-5 h-5 transition-transform ${isActive ? 'scale-110 text-cyan-300 drop-shadow-[0_0_6px_rgba(6,182,212,0.5)]' : ''}`} />
                 {isLocked && (
                   <span className="absolute -top-1 -right-2 bg-amber-500/90 text-slate-950 p-0.5 rounded-full shadow-sm">
                     <Lock className="w-2.5 h-2.5" />
@@ -82,7 +82,7 @@ export default function BottomNav() {
                 {item.label}
               </span>
               {isActive && (
-                <span className="absolute bottom-0 w-6 h-0.5 bg-indigo-500 rounded-full"></span>
+                <span className="absolute bottom-0 w-6 h-0.5 bg-cyan-400 rounded-full shadow-[0_0_6px_#22d3ee]"></span>
               )}
             </button>
           );

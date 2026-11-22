@@ -9,24 +9,24 @@ export default {
     extend: {
       colors: {
         brand: {
-          50: '#eef2ff',
-          100: '#e0e7ff',
-          200: '#c7d2fe',
-          300: '#a5b4fc',
-          400: '#818cf8',
-          500: '#6366f1',
-          600: '#4f46e5',
-          700: '#4338ca',
-          800: '#3730a3',
-          900: '#312e81',
-          accent: '#10b981'
+          50: '#ecfeff',
+          100: '#cffafe',
+          200: '#a5f3fc',
+          300: '#67e8f9',
+          400: '#22d3ee',
+          500: '#06b6d4', // Vibrant Cyan (like Admin Dashboard V2)
+          600: '#0891b2',
+          700: '#0e7490',
+          800: '#155e75',
+          900: '#164e63',
+          accent: '#10b981' // Emerald Mint
         },
         dark: {
-          bg: '#0a0f1d',
-          surface: '#121a2d',
-          card: '#18223c',
-          border: '#223154',
-          hover: '#293963'
+          bg: '#06131c', // Deep Obsidian Teal
+          surface: '#0a1d29',
+          card: '#0e2736',
+          border: '#16384d',
+          hover: '#1b445e'
         }
       },
       fontFamily: {
